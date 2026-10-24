@@ -42,7 +42,37 @@
                         @csrf
                         <button type="submit" class="btn btn-restore"><i class="bi bi-arrow-counterclockwise me-1"></i>Restaurar quadro</button>
                     </form>
+                    <button type="button" class="btn btn-permanent-delete" data-bs-toggle="modal" data-bs-target="#deleteBoardPermanentlyModal-{{ $board->id }}">
+                        <i class="bi bi-trash3 me-1"></i>Apagar definitivamente
+                    </button>
                 </article>
+                <div class="modal fade" id="deleteBoardPermanentlyModal-{{ $board->id }}" tabindex="-1" aria-labelledby="deleteBoardPermanentlyModalLabel-{{ $board->id }}" aria-describedby="deleteBoardPermanentlyModalDescription-{{ $board->id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content board-modal">
+                            <form action="{{ route('boards.permanently-delete', $board->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <div class="modal-header">
+                                    <div>
+                                        <div class="section-kicker">AÇÃO IRREVERSÍVEL</div>
+                                        <h2 class="modal-title" id="deleteBoardPermanentlyModalLabel-{{ $board->id }}">Apagar quadro definitivamente?</h2>
+                                    </div>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="list-delete-warning">
+                                        <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+                                        <p id="deleteBoardPermanentlyModalDescription-{{ $board->id }}">O quadro <strong>{{ $board->title }}</strong>, todas as suas listas e tarefas serão apagados permanentemente. Não será possível restaurá-los.</p>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-modal-cancel" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-modal-delete"><i class="bi bi-trash3 me-1"></i>Apagar definitivamente</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             @empty
                 <p class="trash-empty">Não existem quadros apagados.</p>
             @endforelse
@@ -67,7 +97,37 @@
                         @csrf
                         <button type="submit" class="btn btn-restore"><i class="bi bi-arrow-counterclockwise me-1"></i>Restaurar lista</button>
                     </form>
+                    <button type="button" class="btn btn-permanent-delete" data-bs-toggle="modal" data-bs-target="#deleteListPermanentlyModal-{{ $list->id }}">
+                        <i class="bi bi-trash3 me-1"></i>Apagar definitivamente
+                    </button>
                 </article>
+                <div class="modal fade" id="deleteListPermanentlyModal-{{ $list->id }}" tabindex="-1" aria-labelledby="deleteListPermanentlyModalLabel-{{ $list->id }}" aria-describedby="deleteListPermanentlyModalDescription-{{ $list->id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content board-modal">
+                            <form action="{{ route('lists.permanently-delete', $list->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <div class="modal-header">
+                                    <div>
+                                        <div class="section-kicker">AÇÃO IRREVERSÍVEL</div>
+                                        <h2 class="modal-title" id="deleteListPermanentlyModalLabel-{{ $list->id }}">Apagar lista definitivamente?</h2>
+                                    </div>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="list-delete-warning">
+                                        <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+                                        <p id="deleteListPermanentlyModalDescription-{{ $list->id }}">A lista <strong>{{ $list->title }}</strong> e todas as suas tarefas serão apagadas permanentemente. Não será possível restaurá-las.</p>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-modal-cancel" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-modal-delete"><i class="bi bi-trash3 me-1"></i>Apagar definitivamente</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             @empty
                 <p class="trash-empty">Não existem listas apagadas.</p>
             @endforelse

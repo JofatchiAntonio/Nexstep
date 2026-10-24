@@ -26,7 +26,7 @@
                     <i class="bi bi-camera me-1"></i>Escolher fotografia
                 </button>
                 @if ($this->user->profile_photo_path)
-                    <button type="button" class="btn btn-profile-secondary" wire:click="deleteProfilePhoto" wire:loading.attr="disabled">
+                    <button type="button" class="btn btn-profile-secondary" data-bs-toggle="modal" data-bs-target="#removeProfilePhotoModal">
                         Remover fotografia
                     </button>
                 @endif
@@ -36,6 +36,33 @@
                 @enderror
                 <div wire:loading wire:target="photo" class="profile-photo-hint">A carregar fotografia...</div>
             </div>
+            @if ($this->user->profile_photo_path)
+                <div class="modal fade" id="removeProfilePhotoModal" tabindex="-1" aria-labelledby="removeProfilePhotoModalLabel" aria-describedby="removeProfilePhotoModalDescription" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content board-modal">
+                            <div class="modal-header">
+                                <div>
+                                    <div class="section-kicker">CONFIRMAR EXCLUSÃO</div>
+                                    <h2 class="modal-title" id="removeProfilePhotoModalLabel">Remover fotografia?</h2>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="list-delete-warning">
+                                    <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+                                    <p id="removeProfilePhotoModalDescription">A fotografia de perfil será removida e substituída pela imagem padrão.</p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-modal-cancel" data-bs-dismiss="modal">Manter fotografia</button>
+                                <button type="button" class="btn btn-modal-delete" wire:click="deleteProfilePhoto" wire:loading.attr="disabled" data-bs-dismiss="modal">
+                                    <i class="bi bi-trash3 me-1"></i>Remover fotografia
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
     @endif
 

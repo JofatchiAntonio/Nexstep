@@ -50,13 +50,9 @@
                                     <button type="button" class="board-delete-button" data-bs-toggle="modal" data-bs-target="#editBoardModal-{{ $board->id }}" aria-label="Editar quadro {{ $board->title }}" title="Editar quadro">
                                         <i class="bi bi-pencil"></i>
                                     </button>
-                                    <form action="{{ route('boards.destroy', $board) }}" method="POST" onsubmit="return confirm('Tem a certeza de que pretende apagar este quadro e as respetivas tarefas?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="board-delete-button" aria-label="Apagar quadro {{ $board->title }}" title="Apagar quadro">
-                                            <i class="bi bi-trash3"></i>
-                                        </button>
-                                    </form>
+                                    <button type="button" class="board-delete-button" data-bs-toggle="modal" data-bs-target="#deleteBoardModal-{{ $board->id }}" aria-label="Apagar quadro {{ $board->title }}" title="Apagar quadro">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -88,6 +84,33 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-modal-cancel" data-bs-dismiss="modal">Cancelar</button>
                                     <button type="submit" class="btn btn-create-board"><i class="bi bi-check2 me-1"></i>Guardar alterações</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="deleteBoardModal-{{ $board->id }}" tabindex="-1" aria-labelledby="deleteBoardModalLabel-{{ $board->id }}" aria-describedby="deleteBoardModalDescription-{{ $board->id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content board-modal">
+                            <form action="{{ route('boards.destroy', $board) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <div class="modal-header">
+                                    <div>
+                                        <div class="section-kicker">CONFIRMAR EXCLUSÃO</div>
+                                        <h2 class="modal-title" id="deleteBoardModalLabel-{{ $board->id }}">Apagar quadro?</h2>
+                                    </div>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="list-delete-warning">
+                                        <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+                                        <p id="deleteBoardModalDescription-{{ $board->id }}">O quadro <strong>{{ $board->title }}</strong>, as suas listas e tarefas serão movidos para a lixeira. Poderá restaurá-los mais tarde.</p>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-modal-cancel" data-bs-dismiss="modal">Manter quadro</button>
+                                    <button type="submit" class="btn btn-modal-delete"><i class="bi bi-trash3 me-1"></i>Apagar quadro</button>
                                 </div>
                             </form>
                         </div>

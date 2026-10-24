@@ -4,6 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script>
+        try {
+            const themePreference = localStorage.getItem('nexstep-theme');
+            document.documentElement.dataset.theme = themePreference === 'dark' ? 'dark' : 'light';
+        } catch {
+            document.documentElement.dataset.theme = 'light';
+        }
+    </script>
 
     <title>@yield('page-title', 'Os meus quadros') · Nexstep</title>
 
@@ -76,6 +84,9 @@
                     <div class="topbar-title">@yield('header', 'Os meus quadros')</div>
                 </div>
                 <div class="topbar-user">
+                    <button type="button" class="theme-toggle" data-theme-toggle aria-label="Ativar modo escuro" title="Ativar modo escuro" aria-pressed="false">
+                        <i class="bi bi-moon-stars" aria-hidden="true"></i>
+                    </button>
                     <span class="topbar-status"><i class="bi bi-circle-fill"></i> Sessão ativa</span>
                     <a href="{{ route('profile.show') }}" class="user-avatar-link" aria-label="Editar perfil">
                         @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())

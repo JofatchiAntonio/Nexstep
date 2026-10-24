@@ -4,6 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script>
+        try {
+            const themePreference = localStorage.getItem('nexstep-theme');
+            document.documentElement.dataset.theme = themePreference === 'dark' ? 'dark' : 'light';
+        } catch {
+            document.documentElement.dataset.theme = 'light';
+        }
+    </script>
 
     <title>Nexstep</title>
 
@@ -16,6 +24,9 @@
 </head>
 <body class="guest-body">
     {{ $slot }}
+    <button type="button" class="theme-toggle guest-theme-toggle" data-theme-toggle aria-label="Ativar modo escuro" title="Ativar modo escuro" aria-pressed="false">
+        <i class="bi bi-moon-stars" aria-hidden="true"></i>
+    </button>
 
     @livewireScripts
 </body>

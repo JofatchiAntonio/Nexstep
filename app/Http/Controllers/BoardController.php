@@ -58,7 +58,7 @@ class BoardController extends Controller
         $this->authorizeBoard($board);
 
         // Carrega as listas ordenadas e os cartões de cada lista
-        $board->load('lists.cards');
+        $board->load('lists.cards.histories.user');
 
         return view('boards.show', compact('board'));
     }
@@ -122,6 +122,25 @@ class BoardController extends Controller
         });
 
         return redirect()->route('boards.trash')->with('success', 'Quadro e respetivas tarefas restaurados com sucesso!');
+    }
+
+    public function permanentlyDelete(int $board): RedirectResponse
+    {
+        $board = Board::onlyTrashed()
+            ->where('user_id', Auth::id())
+            ->findOrFail($board);
+
+        DB::transaction(function () use ($board): void {
+            $listIds = CardList::withTrashed()
+                ->where('board_id', $board->id)
+                ->pluck('id');
+
+            Card::withTrashed()->whereIn('card_list_id', $listIds)->forceDelete();
+            CardList::withTrashed()->where('board_id', $board->id)->forceDelete();
+            $board->forceDelete();
+        });
+
+        return redirect()->route('boards.trash')->with('success', 'Quadro apagado permanentemente!');
     }
 
     private function authorizeBoard(Board $board): void

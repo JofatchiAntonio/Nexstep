@@ -21,6 +21,8 @@ class CardListController extends Controller
 
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
+            'start_date' => ['nullable', 'required_with:end_date', 'date'],
+            'end_date' => ['nullable', 'required_with:start_date', 'date', 'after_or_equal:start_date', 'after_or_equal:today'],
         ]);
 
         // Pega a última posição para colocar a nova lista no final
@@ -30,6 +32,8 @@ class CardListController extends Controller
             'board_id' => $board->id,
             'title' => $validated['title'],
             'position' => $lastPosition + 1,
+            'start_date' => $validated['start_date'] ?? null,
+            'end_date' => $validated['end_date'] ?? null,
         ]);
 
         return redirect()->route('boards.show', $board->id)->with('success', 'Lista criada com sucesso!');
@@ -41,6 +45,8 @@ class CardListController extends Controller
 
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
+            'start_date' => ['nullable', 'required_with:end_date', 'date'],
+            'end_date' => ['nullable', 'required_with:start_date', 'date', 'after_or_equal:start_date'],
         ]);
 
         $list->update($validated);
@@ -78,6 +84,19 @@ class CardListController extends Controller
         });
 
         return redirect()->route('boards.trash')->with('success', 'Lista e respetivas tarefas restauradas com sucesso!');
+    }
+
+    public function permanentlyDelete(int $list): RedirectResponse
+    {
+        $list = CardList::onlyTrashed()->findOrFail($list);
+        $this->authorizeList($list);
+
+        DB::transaction(function () use ($list): void {
+            Card::withTrashed()->where('card_list_id', $list->id)->forceDelete();
+            $list->forceDelete();
+        });
+
+        return redirect()->route('boards.trash')->with('success', 'Lista e tarefas apagadas permanentemente!');
     }
 
     private function authorizeList(CardList $list): void

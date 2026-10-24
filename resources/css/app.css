@@ -12,10 +12,18 @@
     background: #f5f7fb;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
+    color-scheme: light;
     --workspace-ink: #172033;
     --workspace-muted: #778196;
     --workspace-primary: #4f46e5;
     --workspace-border: #e8ebf2;
+    --workspace-canvas: #f5f7fb;
+    --workspace-surface: #fff;
+    --workspace-surface-raised: #fff;
+    --workspace-surface-soft: #f0f2f7;
+    --workspace-control: #fff;
+    --workspace-control-border: #e1e5ee;
+    --workspace-rule: #e9ecf2;
 }
 
 body {
@@ -24,7 +32,7 @@ body {
 
 .workspace-body {
     margin: 0;
-    background: #f5f7fb;
+    background: var(--workspace-canvas);
     color: var(--workspace-ink);
 }
 
@@ -278,6 +286,31 @@ body {
     display: flex;
     align-items: center;
     gap: 14px;
+}
+
+.theme-toggle {
+    display: grid;
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    place-items: center;
+    border: 1px solid var(--workspace-border);
+    border-radius: 10px;
+    background: var(--workspace-surface);
+    color: var(--workspace-muted);
+    font-size: 15px;
+    transition: background .18s ease, color .18s ease, border-color .18s ease;
+}
+
+.theme-toggle:hover {
+    border-color: #c9c6f5;
+    background: #f7f6ff;
+    color: #5146d9;
+}
+
+.theme-toggle:focus-visible {
+    outline: 3px solid #5146d966;
+    outline-offset: 2px;
 }
 
 .topbar-status {
@@ -582,6 +615,44 @@ body {
     font-size: 12px;
 }
 
+.btn-modal-delete {
+    min-height: 40px;
+    padding: 9px 15px;
+    border: 1px solid #bd343d;
+    border-radius: 9px;
+    background: #c43f47;
+    color: #fff;
+    font-size: 12px;
+}
+
+.btn-modal-delete:hover {
+    border-color: #a92e37;
+    background: #a92e37;
+    color: #fff;
+}
+
+.list-delete-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 15px;
+    border: 1px solid #f1d3d4;
+    border-radius: 9px;
+    background: #fff6f5;
+    color: #8d353b;
+}
+
+.list-delete-warning > i {
+    margin-top: 2px;
+    color: #c43f47;
+}
+
+.list-delete-warning p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
 .workspace-alert {
     border: 0;
     border-radius: 11px;
@@ -864,6 +935,23 @@ body {
     color: #fff;
 }
 
+.btn-permanent-delete {
+    flex: 0 0 auto;
+    padding: 8px 11px;
+    border: 1px solid #f1d3d4;
+    border-radius: 8px;
+    background: #fff6f5;
+    color: #a92e37;
+    font-size: 10px;
+    font-weight: 650;
+}
+
+.btn-permanent-delete:hover {
+    border-color: #a92e37;
+    background: #a92e37;
+    color: #fff;
+}
+
 .trash-empty {
     margin: 0;
     padding: 16px;
@@ -971,56 +1059,28 @@ body {
     gap: 8px;
 }
 
-.task-list-menu {
-    position: relative;
-    margin-left: auto;
+.task-list-actions {
+    display: grid;
+    grid-auto-flow: column;
+    gap: 3px;
+    margin-left: 2px;
 }
 
-.task-list-menu summary {
+.task-list-edit-button {
     display: grid;
     width: 25px;
     height: 25px;
     place-items: center;
+    border: 0;
     border-radius: 6px;
+    background: transparent;
     color: #8992a4;
-    cursor: pointer;
     font-size: 10px;
-    list-style: none;
 }
 
-.task-list-menu summary::-webkit-details-marker {
-    display: none;
-}
-
-.task-list-menu summary:hover,
-.task-list-menu[open] summary {
+.task-list-edit-button:hover {
     background: #e6e7f4;
     color: #5146d9;
-}
-
-.task-list-rename-form {
-    position: absolute;
-    z-index: 5;
-    top: 29px;
-    right: -29px;
-    display: flex;
-    width: 236px;
-    gap: 6px;
-    padding: 8px;
-    border: 1px solid #e6e9f0;
-    border-radius: 9px;
-    background: #fff;
-    box-shadow: 0 8px 22px #1c27351c;
-}
-
-.task-list-rename-form .form-control {
-    min-width: 0;
-    min-height: 34px;
-    font-size: 10px;
-}
-
-.task-list-header form {
-    margin-left: -5px;
 }
 
 .task-list-delete {
@@ -1061,6 +1121,20 @@ body {
     font-weight: 700;
 }
 
+.task-list-dates {
+    display: grid;
+    gap: 5px;
+    padding: 0 15px 12px;
+    color: #778196;
+    font-size: 9px;
+}
+
+.task-list-dates span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
 .task-list-cards {
     display: grid;
     gap: 9px;
@@ -1079,12 +1153,69 @@ body {
 }
 
 .task-card-title {
-    padding-right: 25px;
+    min-width: 0;
+    flex: 1;
     color: #3b465b;
     font-size: 11px;
     font-weight: 600;
     line-height: 1.5;
     overflow-wrap: anywhere;
+}
+
+.task-card-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    padding-right: 23px;
+}
+
+.task-completion-form {
+    flex: 0 0 auto;
+    margin-top: 1px;
+}
+
+.task-completion-form .form-check-input {
+    width: 15px;
+    height: 15px;
+    margin: 0;
+    border-color: #bac2d0;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+.task-completion-form .form-check-input:checked {
+    border-color: #208b65;
+    background-color: #208b65;
+}
+
+.task-card-title.is-completed {
+    color: #8992a4;
+    text-decoration: line-through;
+}
+
+.task-status-badge {
+    flex: 0 0 auto;
+    padding: 3px 6px;
+    border-radius: 5px;
+    font-size: 8px;
+    font-weight: 700;
+    line-height: 1.3;
+    text-transform: capitalize;
+}
+
+.task-status-pendente {
+    background: #edf1f6;
+    color: #657086;
+}
+
+.task-status-atraso {
+    background: #fff0e7;
+    color: #a4491b;
+}
+
+.task-status-feito {
+    background: #e5f5ee;
+    color: #24734f;
 }
 
 .task-card-date {
@@ -1097,6 +1228,48 @@ body {
     background: #f4f5f9;
     color: #758095;
     font-size: 9px;
+}
+
+.task-card-history {
+    margin-top: 9px;
+    border-top: 1px solid #edf0f5;
+    padding-top: 8px;
+}
+
+.task-card-history summary {
+    color: #778196;
+    cursor: pointer;
+    font-size: 9px;
+    list-style: none;
+}
+
+.task-card-history summary::-webkit-details-marker {
+    display: none;
+}
+
+.task-card-history summary i {
+    margin-right: 4px;
+}
+
+.task-card-history ul {
+    display: grid;
+    gap: 7px;
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.task-card-history li {
+    display: grid;
+    gap: 2px;
+    color: #59657b;
+    font-size: 9px;
+}
+
+.task-card-history li time,
+.task-card-history li small {
+    color: #8992a4;
+    font-size: 8px;
 }
 
 .task-card-actions {
@@ -1145,6 +1318,17 @@ body {
     background: #fff;
     font-size: 10px;
     box-shadow: none;
+}
+
+.add-card-form input[name="title"] {
+    min-width: 0;
+    flex: 1;
+}
+
+.add-card-form .task-due-date-input {
+    width: 112px;
+    min-width: 0;
+    padding: 5px;
 }
 
 .add-card-form .form-control:focus,
@@ -1250,6 +1434,13 @@ body {
     min-height: 100vh;
     grid-template-columns: minmax(420px, .92fr) minmax(520px, 1.08fr);
     background: #fff;
+}
+
+.guest-theme-toggle {
+    position: fixed;
+    z-index: 1080;
+    top: 22px;
+    right: 22px;
 }
 
 .login-panel {
@@ -1785,7 +1976,9 @@ body {
         flex-basis: calc(100% - 55px);
     }
 
-    .trash-item form {
+    .trash-item > form,
+    .trash-item-actions,
+    .trash-item > .btn-permanent-delete {
         margin-left: 50px;
     }
 
@@ -1815,5 +2008,281 @@ body {
 
     .login-footer {
         flex-direction: column;
+    }
+}
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+    --workspace-ink: #e5ebf2;
+    --workspace-muted: #a0adbd;
+    --workspace-border: #354252;
+    --workspace-canvas: #121a23;
+    --workspace-surface: #1a2530;
+    --workspace-surface-raised: #202d3a;
+    --workspace-surface-soft: #222f3d;
+    --workspace-control: #151f29;
+    --workspace-control-border: #3a4858;
+    --workspace-rule: #303e4d;
+}
+
+html[data-theme="dark"] .workspace-body,
+html[data-theme="dark"] .guest-body {
+    background: var(--workspace-canvas);
+    color: var(--workspace-ink);
+}
+
+html[data-theme="dark"] .workspace-topbar,
+html[data-theme="dark"] .board-tile,
+html[data-theme="dark"] .profile-section,
+html[data-theme="dark"] .trash-item,
+html[data-theme="dark"] .board-page-stat,
+html[data-theme="dark"] .new-list-panel {
+    border-color: var(--workspace-rule);
+    background: var(--workspace-surface);
+}
+
+html[data-theme="dark"] .workspace-topbar,
+html[data-theme="dark"] .workspace-footer,
+html[data-theme="dark"] .board-tile-actions,
+html[data-theme="dark"] .add-card-form,
+html[data-theme="dark"] .task-card-history,
+html[data-theme="dark"] .profile-form-actions {
+    border-color: var(--workspace-rule);
+}
+
+html[data-theme="dark"] .task-list {
+    border-color: var(--workspace-rule);
+    background: var(--workspace-surface-soft);
+}
+
+html[data-theme="dark"] .task-card,
+html[data-theme="dark"] .task-list-count,
+html[data-theme="dark"] .board-delete-button {
+    border-color: var(--workspace-rule);
+    background: var(--workspace-surface-raised);
+}
+
+html[data-theme="dark"] .boards-empty-state,
+html[data-theme="dark"] .board-empty-list,
+html[data-theme="dark"] .trash-empty {
+    border-color: var(--workspace-border);
+    background: var(--workspace-surface);
+}
+
+html[data-theme="dark"] .topbar-title,
+html[data-theme="dark"] .boards-intro h1,
+html[data-theme="dark"] .boards-section-heading h2,
+html[data-theme="dark"] .board-tile h3,
+html[data-theme="dark"] .board-page-heading h1,
+html[data-theme="dark"] .board-page-stat span,
+html[data-theme="dark"] .task-list-header h2,
+html[data-theme="dark"] .task-card-title,
+html[data-theme="dark"] .new-list-heading h2,
+html[data-theme="dark"] .board-empty-list h2,
+html[data-theme="dark"] .boards-empty-state h3,
+html[data-theme="dark"] .profile-page-heading h1,
+html[data-theme="dark"] .profile-section-heading h2,
+html[data-theme="dark"] .trash-item-details strong,
+html[data-theme="dark"] .board-modal .modal-title {
+    color: var(--workspace-ink);
+}
+
+html[data-theme="dark"] .topbar-eyebrow,
+html[data-theme="dark"] .section-kicker,
+html[data-theme="dark"] .topbar-status,
+html[data-theme="dark"] .workspace-footer,
+html[data-theme="dark"] .boards-intro p,
+html[data-theme="dark"] .boards-section-heading span,
+html[data-theme="dark"] .board-tile p,
+html[data-theme="dark"] .board-page-description,
+html[data-theme="dark"] .board-page-stat small,
+html[data-theme="dark"] .task-list-dates,
+html[data-theme="dark"] .task-card-history summary,
+html[data-theme="dark"] .task-card-history li,
+html[data-theme="dark"] .task-card-history li time,
+html[data-theme="dark"] .task-card-history li small,
+html[data-theme="dark"] .new-list-heading p,
+html[data-theme="dark"] .board-empty-list p,
+html[data-theme="dark"] .boards-empty-state p,
+html[data-theme="dark"] .profile-page-heading p,
+html[data-theme="dark"] .profile-section-heading p,
+html[data-theme="dark"] .trash-item-details span,
+html[data-theme="dark"] .task-list-empty,
+html[data-theme="dark"] .trash-empty {
+    color: var(--workspace-muted);
+}
+
+html[data-theme="dark"] .board-open-link,
+html[data-theme="dark"] .profile-verification-notice button {
+    color: #aaa5ff;
+}
+
+html[data-theme="dark"] .board-open-link:hover {
+    color: #cbc8ff;
+}
+
+html[data-theme="dark"] .board-modal,
+html[data-theme="dark"] .modal-content {
+    border-color: var(--workspace-rule);
+    background: var(--workspace-surface);
+    color: var(--workspace-ink);
+}
+
+html[data-theme="dark"] .board-modal .modal-header,
+html[data-theme="dark"] .board-modal .modal-footer {
+    border-color: var(--workspace-rule);
+}
+
+html[data-theme="dark"] .board-modal .form-label,
+html[data-theme="dark"] .profile-form-fields .form-label,
+html[data-theme="dark"] .new-list-panel .form-label {
+    color: var(--workspace-muted);
+}
+
+html[data-theme="dark"] .board-modal .form-control,
+html[data-theme="dark"] .profile-form-fields .form-control,
+html[data-theme="dark"] .add-card-form .form-control,
+html[data-theme="dark"] .new-list-panel .form-control,
+html[data-theme="dark"] .guest-body .form-control {
+    border-color: var(--workspace-control-border);
+    background-color: var(--workspace-control);
+    color: var(--workspace-ink);
+}
+
+html[data-theme="dark"] .board-modal .form-control:focus,
+html[data-theme="dark"] .profile-form-fields .form-control:focus,
+html[data-theme="dark"] .add-card-form .form-control:focus,
+html[data-theme="dark"] .new-list-panel .form-control:focus,
+html[data-theme="dark"] .guest-body .form-control:focus {
+    border-color: #837cf0;
+    background-color: var(--workspace-control);
+    color: var(--workspace-ink);
+}
+
+html[data-theme="dark"] .form-control::placeholder {
+    color: #8290a2;
+}
+
+html[data-theme="dark"] .btn-modal-cancel,
+html[data-theme="dark"] .btn-profile-secondary,
+html[data-theme="dark"] .theme-toggle {
+    border-color: var(--workspace-control-border);
+    background: var(--workspace-surface-raised);
+    color: var(--workspace-ink);
+}
+
+html[data-theme="dark"] .btn-modal-cancel:hover,
+html[data-theme="dark"] .btn-profile-secondary:hover,
+html[data-theme="dark"] .theme-toggle:hover {
+    border-color: #7169df;
+    background: #30374b;
+    color: #d4d1ff;
+}
+
+html[data-theme="dark"] .list-delete-warning {
+    border-color: #704044;
+    background: #39282d;
+    color: #f0b9bb;
+}
+
+html[data-theme="dark"] .list-delete-warning > i {
+    color: #ef8b90;
+}
+
+html[data-theme="dark"] .task-card-date,
+html[data-theme="dark"] .task-status-pendente {
+    background: #2b3948;
+    color: #b5c0ce;
+}
+
+html[data-theme="dark"] .task-status-atraso {
+    background: #49352d;
+    color: #ffc29d;
+}
+
+html[data-theme="dark"] .task-status-feito {
+    background: #243f37;
+    color: #9ee1c1;
+}
+
+html[data-theme="dark"] .task-list-edit-button,
+html[data-theme="dark"] .task-delete-button,
+html[data-theme="dark"] .board-delete-button {
+    color: #a8b3c1;
+}
+
+html[data-theme="dark"] .task-list-edit-button:hover {
+    background: #30374b;
+    color: #c3bfff;
+}
+
+html[data-theme="dark"] .task-delete-button:hover,
+html[data-theme="dark"] .board-delete-button:hover {
+    border-color: #704044;
+    background: #39282d;
+    color: #ff9b9f;
+}
+
+html[data-theme="dark"] .profile-photo-image {
+    border-color: var(--workspace-rule);
+}
+
+html[data-theme="dark"] .profile-section .text-gray-900,
+html[data-theme="dark"] .guest-body .text-gray-900 {
+    color: var(--workspace-ink);
+}
+
+html[data-theme="dark"] .profile-section .text-gray-600,
+html[data-theme="dark"] .profile-section .text-gray-500,
+html[data-theme="dark"] .guest-body .text-gray-600,
+html[data-theme="dark"] .guest-body .text-gray-500 {
+    color: var(--workspace-muted);
+}
+
+html[data-theme="dark"] .profile-section .bg-gray-100,
+html[data-theme="dark"] .guest-body .bg-gray-100 {
+    background-color: var(--workspace-surface-soft);
+}
+
+html[data-theme="dark"] .profile-section .fixed .bg-white,
+html[data-theme="dark"] .guest-body .bg-white {
+    background-color: var(--workspace-surface);
+    color: var(--workspace-ink);
+}
+
+html[data-theme="dark"] .guest-body .border-gray-200,
+html[data-theme="dark"] .guest-body .border-gray-300 {
+    border-color: var(--workspace-rule);
+}
+
+html[data-theme="dark"] .login-screen,
+html[data-theme="dark"] .login-panel {
+    background: var(--workspace-canvas);
+}
+
+html[data-theme="dark"] .brand-lockup,
+html[data-theme="dark"] .login-content h1 {
+    color: var(--workspace-ink);
+}
+
+html[data-theme="dark"] .brand-lockup small,
+html[data-theme="dark"] .login-description,
+html[data-theme="dark"] .login-register,
+html[data-theme="dark"] .login-footer,
+html[data-theme="dark"] .remember-option {
+    color: var(--workspace-muted);
+}
+
+html[data-theme="dark"] .login-form .form-label {
+    color: #c6cfda;
+}
+
+html[data-theme="dark"] .input-icon-wrap > i {
+    color: #8492a3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .theme-toggle {
+        transition: none;
     }
 }
