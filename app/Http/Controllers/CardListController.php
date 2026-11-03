@@ -43,10 +43,22 @@ class CardListController extends Controller
     {
         $this->authorizeList($list);
 
+        $latestCardDueDate = $list->cards()
+            ->whereNotNull('due_date')
+            ->max('due_date');
+
+        $endDateRules = ['nullable', 'required_with:start_date', 'date', 'after_or_equal:start_date'];
+
+        if ($latestCardDueDate !== null) {
+            $endDateRules[] = 'after_or_equal:'.$latestCardDueDate;
+        }
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'start_date' => ['nullable', 'required_with:end_date', 'date'],
-            'end_date' => ['nullable', 'required_with:start_date', 'date', 'after_or_equal:start_date'],
+            'end_date' => $endDateRules,
+        ], [
+            'end_date.after_or_equal' => 'O prazo da lista não pode ser anterior ao início ou ao prazo de uma tarefa.',
         ]);
 
         $list->update($validated);

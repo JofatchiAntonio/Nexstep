@@ -155,7 +155,7 @@
                         <label class="visually-hidden" for="card-title-{{ $list->id }}">Título da tarefa</label>
                         <input id="card-title-{{ $list->id }}" type="text" name="title" class="form-control" placeholder="Nova tarefa..." required maxlength="255">
                         <label class="visually-hidden" for="card-due-date-{{ $list->id }}">Prazo da tarefa</label>
-                        <input id="card-due-date-{{ $list->id }}" type="date" name="due_date" class="form-control task-due-date-input" aria-label="Prazo da tarefa" min="{{ now()->toDateString() }}">
+                        <input id="card-due-date-{{ $list->id }}" type="date" name="due_date" class="form-control task-due-date-input" aria-label="Prazo da tarefa" min="{{ now()->toDateString() }}" max="{{ $list->end_date?->format('Y-m-d') }}">
                         <button type="submit" class="btn-add-card" aria-label="Adicionar tarefa à lista {{ $list->title }}">
                             <i class="bi bi-plus-lg"></i>
                         </button>
@@ -164,6 +164,7 @@
                 <div class="modal fade" id="editListModal-{{ $list->id }}" tabindex="-1" aria-labelledby="editListModalLabel-{{ $list->id }}" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content board-modal">
+                            @php($latestCardDueDate = $list->cards->filter(fn ($card) => $card->due_date !== null)->max(fn ($card) => $card->due_date->toDateString()))
                             <form action="{{ route('lists.update', $list) }}" method="POST">
                                 @csrf
                                 @method('PUT')
@@ -186,7 +187,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <label for="list-end-date-{{ $list->id }}" class="form-label">Data de término</label>
-                                            <input type="date" class="form-control" id="list-end-date-{{ $list->id }}" name="end_date" value="{{ $list->end_date?->format('Y-m-d') }}">
+                                            <input type="date" class="form-control" id="list-end-date-{{ $list->id }}" name="end_date" value="{{ $list->end_date?->format('Y-m-d') }}" min="{{ $latestCardDueDate }}">
                                         </div>
                                     </div>
                                 </div>

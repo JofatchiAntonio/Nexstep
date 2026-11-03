@@ -17,9 +17,17 @@ class CardController extends Controller
             abort(403);
         }
 
+        $dueDateRules = ['nullable', 'date', 'after_or_equal:today'];
+
+        if ($list->end_date !== null) {
+            $dueDateRules[] = 'before_or_equal:'.$list->end_date->toDateString();
+        }
+
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'due_date' => ['nullable', 'date', 'after_or_equal:today'],
+            'due_date' => $dueDateRules,
+        ], [
+            'due_date.before_or_equal' => 'O prazo do item não pode ultrapassar o prazo da lista.',
         ]);
 
         $lastPosition = $list->cards()->max('position') ?? 0;
@@ -41,16 +49,24 @@ class CardController extends Controller
             abort(403);
         }
 
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'due_date' => 'nullable|date',
+        $dueDateRules = ['nullable', 'date'];
+
+        if ($card->list->end_date !== null) {
+            $dueDateRules[] = 'before_or_equal:'.$card->list->end_date->toDateString();
+        }
+
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'due_date' => $dueDateRules,
+        ], [
+            'due_date.before_or_equal' => 'O prazo do item não pode ultrapassar o prazo da lista.',
         ]);
 
         $card->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'due_date' => $request->due_date,
+            'title' => $validated['title'],
+            'description' => $validated['description'] ?? null,
+            'due_date' => $validated['due_date'] ?? null,
         ]);
 
         return redirect()->route('boards.show', $card->list->board_id)->with('success', 'Cartão atualizado com sucesso!');
